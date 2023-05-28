@@ -78,7 +78,7 @@ proc reverseWithRules(cur: int, fixed_text: string, text_reversed: Option[string
     if text_reversed.isNone: 
         return "" 
     else: 
-        return fmt"{text_reversed}{added_suffix}"
+        return fmt"{text_reversed.get()}{added_suffix}"
                 
 
 proc matchPatterns(fixed_text: string, cur: int = 0, rule: bool = false, reversed: bool = false): JsonNode =

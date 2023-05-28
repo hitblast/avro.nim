@@ -1,0 +1,8 @@
+# nim
+nimcache/
+nimblecache/
+htmldocs/
+
+# custom
+avro
+main
