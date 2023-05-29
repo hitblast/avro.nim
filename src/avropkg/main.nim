@@ -15,20 +15,22 @@ import private/[
 
 # Declaring different types of patterns.
 let
-    RULE_PATTERNS* = collect:
+    RULE_PATTERNS*: seq[JsonNode] = collect:
         for pattern in PATTERNS:
             if "rules" in pattern: pattern
 
-    NON_RULE_PATTERNS* = collect:
+    NON_RULE_PATTERNS*: seq[JsonNode] = collect:
         for pattern in PATTERNS:
             if "rules" notin pattern: pattern
 
 # Procs.
 proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 0, patterns: seq[JsonNode]): seq[JsonNode] =
     ## Returns pattern items that match given text, cursor position and pattern.
+    
+    var list: seq[JsonNode] = @[]
 
     if reversed:
-        return collect:
+        list = collect:
             for p in patterns:
                 let compare = p["replace"].getStr()
 
@@ -37,21 +39,22 @@ proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 0, patter
                     (compare == fixed_text[cur..(cur + len(compare))])
                 ):
                     p
+    else:
+        list = collect:
+            for p in patterns:
+                if hasKey(p, "find"):
+                    let compare = p["find"].getStr()
 
-    return collect:
-        for p in patterns:
-            if hasKey(p, "find"):
-                let compare = len(p["find"].getStr())
+                    if (
+                        (cur + len(compare) <= len(fixed_text)) and
+                        compare == fixed_text[cur..(cur + len(compare))]
+                    ):
+                        p
 
-                if (
-                    hasKey(p, "find")) and 
-                    (cur + compare <= len(fixed_text)) and 
-                    (p["find"].getStr() == fixed_text[cur..(cur + compare)]
-                ):
-                    p
+    return list
 
 
-proc reverseWithRules(cur: int, fixed_text: string, text_reversed: Option[string]): string =
+proc reverseWithRules(cur: int, fixed_text: string, text_reversed: string): string =
     ## Enhances the word with rules for reverse-parsing.
 
     var added_suffix = ""
@@ -75,10 +78,10 @@ proc reverseWithRules(cur: int, fixed_text: string, text_reversed: Option[string
     except IndexDefect:
         discard
 
-    if text_reversed.isNone: 
-        return "" 
+    if text_reversed == "": 
+        return text_reversed
     else: 
-        return fmt"{text_reversed.get()}{added_suffix}"
+        return fmt"{text_reversed}{added_suffix}"
                 
 
 proc matchPatterns(fixed_text: string, cur: int = 0, rule: bool = false, reversed: bool = false): JsonNode =
@@ -99,7 +102,7 @@ proc matchPatterns(fixed_text: string, cur: int = 0, rule: bool = false, reverse
                 "matched": true,
                 "found": pattern[0]{"find"}.getStr(),
                 "replaced": pattern[0]{"replaced"}.getStr(),
-                "reversed": reverseWithRules(cur, fixed_text, some(pattern[0]{"reverse"}.getStr()))
+                "reversed": reverseWithRules(cur, fixed_text, pattern[0]{"reverse"}.getStr())
             }
         else:
             return %* {
@@ -256,23 +259,28 @@ proc parse*(text: string, ascii_mode: bool = false): string =
         elif cur >= cur_end and uni_pass:
             match = matchPatterns(fixed_text, cur, rule=false)
 
-            if match["matched"].getBool():
-                output.add(match["replaced"].getStr())
-                cur_end = cur + len(match["found"].getStr())
+            let
+                matched = match["matched"].getBool()
+                found = match["found"].getStr()
+                replaced = match["replaced"].getStr()
+
+            if matched:
+                output.add(replaced)
+                cur_end = cur + len(found)
 
             else:
                 match = matchPatterns(fixed_text, cur, rule=true)
 
-                if match["matched"].getBool():
-                    cur_end = cur + len(match["found"].getStr())
-                    let replaced = processRules(match["rules"], fixed_text, cur, cur_end)
+                if matched:
+                    cur_end = cur + len(found)
+                    let processed = processRules(match["rules"], fixed_text, cur, cur_end)
 
-                    if not replaced.isNone:
-                        output.add(replaced.get())
+                    if processed.isSome:
+                        output.add(processed.get())
                     else:
-                        output.add(match["replaced"].getStr())
+                        output.add(replaced)
 
-            if not match["matched"].getBool():
+            if not matched:
                 cur_end = cur + 1
                 output.add(text)
 
