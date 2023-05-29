@@ -36,7 +36,7 @@ proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 0, patter
 
                 if (
                     (cur + len(compare) <= len(fixed_text)) and 
-                    (compare == fixed_text[cur..(cur + len(compare))])
+                    (compare == fixed_text[cur .. (cur + len(compare))])
                 ):
                     p
     else:
@@ -47,7 +47,7 @@ proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 0, patter
 
                     if (
                         (cur + len(compare) <= len(fixed_text)) and
-                        compare == fixed_text[cur..(cur + len(compare))]
+                        compare == fixed_text[cur .. (cur + len(compare))]
                     ):
                         p
 
@@ -139,7 +139,7 @@ proc processMatch(match: JsonNode, fixed_text: string, cur: int, cur_end: int): 
         negative: bool
 
     if ($scope_var).startswith("!"):
-        scope = scope_var[1..^1]
+        scope = scope_var[1 .. ^1]
         negative = true
     else:
         scope = scope_var
