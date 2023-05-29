@@ -4,3 +4,5 @@
 ### A modern Nim implementation of Avro Phonetic.
 
 </div>
+
+**WARNING: This project is still in its very early stages and might not be stable for production use cases.**
