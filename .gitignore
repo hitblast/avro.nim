@@ -6,3 +6,5 @@ htmldocs/
 # custom
 avro
 main
+
+*.exe

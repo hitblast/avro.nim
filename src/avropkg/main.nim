@@ -35,8 +35,8 @@ proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 1, patter
                 let compare = p["replace"].getStr()
 
                 if (
-                    (cur + len(compare) <= len(fixed_text)) and 
-                    (compare == fixed_text[cur .. (cur + len(compare) - 1)])
+                    (cur + len(compare) + 1 <= len(fixed_text) - 1) and 
+                    (compare == fixed_text[cur + 1 .. (cur + len(compare) - 1)])
                 ):
                     p
     else:
@@ -46,8 +46,8 @@ proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 1, patter
                     let compare = p["find"].getStr()
 
                     if (
-                        (cur + len(compare) <= len(fixed_text)) and
-                        compare == fixed_text[cur .. (cur + len(compare) - 1)]
+                        (cur + len(compare) + 1 <= len(fixed_text) - 1) and
+                        compare == fixed_text[cur + 1 .. (cur + len(compare) - 1)]
                     ):
                         p
 
