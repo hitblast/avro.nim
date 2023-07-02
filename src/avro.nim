@@ -4,4 +4,7 @@
 import avropkg/main
 
 when isMainModule:
+  echo(parse("amar nam tanim"))
+  echo(parse("ki khobor? kemon acho?"))
   echo(parse("ami banglay gan gai"))
+
