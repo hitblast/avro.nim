@@ -24,7 +24,7 @@ let
             if "rules" notin pattern: pattern
 
 # Procs.
-proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 1, patterns: seq[JsonNode]): seq[JsonNode] =
+proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 0, patterns: seq[JsonNode]): seq[JsonNode] =
     ## Returns pattern items that match given text, cursor position and pattern.
     
     var list: seq[JsonNode] = @[]
@@ -44,13 +44,11 @@ proc exactFindInPattern(fixed_text: string, reversed: bool, cur: int = 1, patter
             for p in patterns:
                 if hasKey(p, "find"):
                     let compare = p["find"].getStr()
-
                     if (
-                        (cur + len(compare) + 1 <= len(fixed_text) - 1) and
-                        compare == fixed_text[cur + 1 .. (cur + len(compare) - 1)]
+                        (cur + len(compare) <= len(fixed_text)) and
+                        compare == fixed_text[cur .. (cur + len(compare) - 1)]
                     ):
                         p
-
     return list
 
 
@@ -84,7 +82,7 @@ proc reverseWithRules(cur: int, fixed_text: string, text_reversed: string): stri
         return fmt"{text_reversed}{added_suffix}"
                 
 
-proc matchPatterns(fixed_text: string, cur: int = 1, rule: bool = false, reversed: bool = false): JsonNode =
+proc matchPatterns(fixed_text: string, cur: int = 0, rule: bool = false, reversed: bool = false): JsonNode =
     ## Matches given text at cursor position with rule / non rule patterns.
     ## 
     ## Returns a dictionary of three elements:
@@ -101,7 +99,7 @@ proc matchPatterns(fixed_text: string, cur: int = 1, rule: bool = false, reverse
             return %* {
                 "matched": true,
                 "found": pattern[0]{"find"}.getStr(),
-                "replaced": pattern[0]{"replaced"}.getStr(),
+                "replaced": pattern[0]{"replace"}.getStr(),
                 "reversed": reverseWithRules(cur, fixed_text, pattern[0]{"reverse"}.getStr())
             }
         else:
@@ -139,7 +137,7 @@ proc processMatch(match: JsonNode, fixed_text: string, cur: int, cur_end: int): 
         negative: bool
 
     if ($scope_var).startswith("!"):
-        scope = scope_var[2 .. ^1]
+        scope = scope_var[1 .. ^1]
         negative = true
     else:
         scope = scope_var
@@ -195,7 +193,7 @@ proc processMatch(match: JsonNode, fixed_text: string, cur: int, cur_end: int): 
     return replace
 
 
-proc processRules(rules: JsonNode, fixed_text: string, cur: int = 1, cur_end: int = 1): Option[string] =
+proc processRules(rules: JsonNode, fixed_text: string, cur: int = 0, cur_end: int = 1): Option[string] =
     ## Process rules matched in pattern and returns suitable replacement.
     ## 
     ## If any rule's condition is satisfied, output the rules "replace", else output none.
@@ -219,6 +217,9 @@ proc processRules(rules: JsonNode, fixed_text: string, cur: int = 1, cur_end: in
             break
 
     return if matched: some(replaced) else: none(string)
+
+
+
 
 
 proc parse*(text: string, ascii_mode: bool = false): string =
@@ -259,7 +260,7 @@ proc parse*(text: string, ascii_mode: bool = false): string =
         elif cur >= cur_end and uni_pass:
             match = matchPatterns(fixed_text, cur, rule=false)
 
-            let
+            var
                 matched = match["matched"].getBool()
                 found = match["found"].getStr()
                 replaced = match["replaced"].getStr()
@@ -270,6 +271,11 @@ proc parse*(text: string, ascii_mode: bool = false): string =
 
             else:
                 match = matchPatterns(fixed_text, cur, rule=true)
+                
+                # resign modified value
+                matched = match["matched"].getBool()
+                found = match["found"].getStr()
+                replaced = match["replaced"].getStr()
 
                 if matched:
                     cur_end = cur + len(found)
