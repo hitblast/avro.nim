@@ -60,7 +60,7 @@ proc reverseWithRules(cur: int, fixed_text: string, text_reversed: string): stri
 
     if not (
         (primary_char in KAR) or 
-        (primary_char in SHORBORNO) or 
+        (primary_char in SHOROBORNO) or 
         (primary_char in IGNORE) or 
         (len(fixed_text) == cur + 1)
     ):
@@ -98,8 +98,8 @@ proc matchPatterns(fixed_text: string, cur: int = 0, rule: bool = false, reverse
         if not rule:
             return %* {
                 "matched": true,
-                "found": pattern[0]{"find"}.getStr(),
-                "replaced": pattern[0]{"replace"}.getStr(),
+                "found": pattern[0]{"find"},
+                "replaced": pattern[0]{"replace"},
                 "reversed": reverseWithRules(cur, fixed_text, pattern[0]{"reverse"}.getStr())
             }
         else:
@@ -219,10 +219,7 @@ proc processRules(rules: JsonNode, fixed_text: string, cur: int = 0, cur_end: in
     return if matched: some(replaced) else: none(string)
 
 
-
-
-
-proc parse*(text: string, ascii_mode: bool = false): string =
+proc parse*(text: string): string =
     ## Parses input text, matches and replaces using Avro Dictionary.
     ## 
     ## If a valid replacement is found, then it returns the replaced string.
@@ -230,9 +227,6 @@ proc parse*(text: string, ascii_mode: bool = false): string =
     ## 
     ## Parameters:
     ## - `text` (string): The text to parse.
-    ## - `ascii_mode` (bool): Output in ASCII format. Defaults to false.
-    ## 
-    ## Usage:
     
     # Sanitize text case to meet phonetic comparison standards.
     let fixed_text = fixStringCase(text)

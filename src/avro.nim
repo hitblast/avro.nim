@@ -1,10 +1,7 @@
-# This is just an example to get you started. A typical hybrid package
-# uses this file as the main entry point of the application.
+# Imports.
+# import avropkg/main
 
-import avropkg/main
-
+# Run the command-line interface module.
 when isMainModule:
-  echo(parse("amar nam tanim"))
-  echo(parse("ki khobor? kemon acho?"))
-  echo(parse("ami banglay gan gai"))
+  echo "work-in progress :P"
 

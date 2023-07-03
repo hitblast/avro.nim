@@ -13,8 +13,8 @@ let
     CASESENSITIVES*: seq[string] = @["o", "i", "u", "d", "g", "j", "n", "r", "s", "t", "y", "z"]
     NUMBERS*: seq[string] = @["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
-    # Shortcuts to Bengali Shorborno, Kar(s)
-    SHORBORNO*: seq[string] = @["অ", "আ", "ই", "ঈ", "উ", "ঊ", "এ", "ঐ", "ও", "ঔ"]
+    # Shortcuts to Bengali shoroborno, Kar(s)
+    SHOROBORNO*: seq[string] = @["অ", "আ", "ই", "ঈ", "উ", "ঊ", "এ", "ঐ", "ও", "ঔ"]
     KAR*: seq[string] = @["া", "ি", "ী", "ু", "ূ", "ৃ", "ে", "ৈ", "ো", "ৌ"]
 
     # Ignored symbols
