@@ -14,11 +14,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        nimversion:
-          - binary:stable
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -26,7 +21,7 @@ jobs:
     - name: Setup Nim
       uses: iffy/install-nim@v4
       with:
-        version: ${{ matrix.nimversion }}
+        version: binary:stable
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
