@@ -1,6 +1,5 @@
 # Imports.
 import strutils
-
 import ./../dictionary
 
 

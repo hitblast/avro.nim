@@ -20,9 +20,8 @@ test "test patterns without rules from config":
     ## Tests all patterns from config that don't have rules.
 
     for pattern in PATTERNS:
-        if "rules" notin pattern:
-            if pattern{"find"} != nil:
-                check pattern["replace"].getStr() == parse(pattern["find"].getStr())
+        if ("rules" notin pattern and pattern{"find"} != nil):
+            check pattern["replace"].getStr() == parse(pattern["find"].getStr())
 
 
 test "test patterns without rules not from config":

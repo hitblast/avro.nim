@@ -7,20 +7,20 @@ import std/[
 
 # Declaring different parts of the Avro Dictionary.
 let
-    # Shortcuts to vowels, constants, case-sensitives and numbers
+    # Shortcuts to vowels, constants, case-sensitives and numbers.
     VOWELS*: seq[string] = @["a", "e", "i", "o", "u"]
     CONSONANTS*: seq[string] = @["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"]
     CASESENSITIVES*: seq[string] = @["o", "i", "u", "d", "g", "j", "n", "r", "s", "t", "y", "z"]
     NUMBERS*: seq[string] = @["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
-    # Shortcuts to Bengali shoroborno, Kar(s)
+    # Shortcuts to Bengali shoroborno, Kar(s).
     SHOROBORNO*: seq[string] = @["অ", "আ", "ই", "ঈ", "উ", "ঊ", "এ", "ঐ", "ও", "ঔ"]
     KAR*: seq[string] = @["া", "ি", "ী", "ু", "ূ", "ৃ", "ে", "ৈ", "ো", "ৌ"]
 
-    # Ignored symbols
+    # Ignored symbols.
     IGNORE*: seq[string] = @["ঁ", "।", "?", ".", "-", ";"]
 
-    # Remapped words
+    # Remapped words.
     EXCEPTIONS*: Table[string, string] = {
         "ফেসবুক": "Facebook",
         "গুগল": "Google",
@@ -30,7 +30,7 @@ let
         "লিঙ্কডইন": "Linkedin"
     }.toTable
 
-    # Common patterns (JsonNode) for Avro
+    # Common patterns (JsonNode) for Avro.
     PATTERNS*: JsonNode = %*
         [
             {
