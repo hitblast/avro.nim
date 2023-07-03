@@ -122,9 +122,10 @@ test "test words with punctuations":
 
 test "test sentences (default / unicode)":
     let sentences = {
-        "আমি বাংলায় গান গাই": parse("ami banglay gan gai"),
-        "আমি আমার আমিকে চিরদিন এই বাংলায় খুঁজে পাই": parse("ami amar amike cirodin ei banglay khu^je pai"),
-        "আমি বাংলায় দেখি স্বপ্ন, আমি বাংলায় বাঁধি সুর": parse("ami banglay dekhi swopno, ami banglay ba^dhi sur")
+        "আমি বাংলায় গান গাই।": parse("ami banglay gan gai."),
+        "আমি আমার আমিকে চিরদিন এই বাংলায় খুঁজে পাই।": parse("ami amar amike cirodin ei banglay khu^je pai."),
+        "আমি বাংলায় দেখি স্বপ্ন, আমি বাংলায় বাঁধি সুর;": parse("ami banglay dekhi swopno, ami banglay ba^dhi sur;"),
+        "আমি এই বাংলার মায়া ভরা পথে, হেঁটেছি এতটা দূর।": parse("ami ei banglar maya bhora pothe, he^Techi etoTa dUr.")
     }.toTable
 
     for key, value in sentences:
