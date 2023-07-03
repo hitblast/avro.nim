@@ -5,5 +5,7 @@ htmldocs/
 
 # custom
 avro
-test
 *.exe
+
+# unit test executables
+test_main
