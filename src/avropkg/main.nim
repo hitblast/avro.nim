@@ -219,17 +219,17 @@ proc processRules(rules: JsonNode, fixed_text: string, cur: int = 1, cur_end: in
     return if matched: some(replaced) else: none(string)
 
 
-proc parse*(text: string): string =
+proc parse*(input: string): string =
     ## Parses input text, matches and replaces using Avro Dictionary.
     ## 
     ## If a valid replacement is found, then it returns the replaced string.
     ## If no replacement is found, then it instead returns the input text.
     ## 
     ## Parameters:
-    ## - `text` (string): The text to parse.
+    ## - `input` (string): The text to parse.
     
     # Sanitize text case to meet phonetic comparison standards.
-    let fixed_text = fixStringCase(text)
+    let fixed_text = fixStringCase(input)
 
     var
         output: seq[string] = @[]  # Output list.
@@ -237,19 +237,19 @@ proc parse*(text: string): string =
 
     # Iterate through input text.
     for cur, i in fixed_text:
-        let text = $i
-        var uni_pass: bool
+        let a_char = $i
+        var 
+            uni_pass: bool
+            match = %* {"matched": false}
         
-        if validateUtf8(text) == -1:
+        if validateUtf8(a_char) == -1:
             uni_pass = true
         else:
             uni_pass = false
 
-        var match = %* {"matched": false}
-
         if not uni_pass:
             cur_end = cur + 1
-            output.add(text)
+            output.add(a_char)
 
         elif cur >= cur_end and uni_pass:
             match = matchPatterns(fixed_text, cur, rule=false)
@@ -282,6 +282,6 @@ proc parse*(text: string): string =
 
             if not matched:
                 cur_end = cur + 1
-                output.add(text)
+                output.add(a_char)
 
     return join(output, "")
