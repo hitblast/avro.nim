@@ -3,6 +3,9 @@ nimcache/
 nimblecache/
 htmldocs/
 
+# macOS
+.DS_Store
+
 # custom
 avro
 *.exe
