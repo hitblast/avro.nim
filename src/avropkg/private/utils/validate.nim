@@ -28,7 +28,7 @@ proc isExact*(needle: string, haystack: string, start: int, ending: int, matchno
     ## Check exact occurrence of needle in haystack.
 
     return (
-        start >= 0 and 
+        start >= 1 and 
         ending < len(haystack) and 
         haystack[start..ending] == needle
     ) != matchnot
@@ -50,6 +50,6 @@ proc fixStringCase*(text: string): string =
         if isCaseSensitive(j):
             fixed.add(j)
         else:
-            fixed.add(toLower(j))
+            fixed.add(toLowerAscii(j))
 
     return join(fixed, "")
